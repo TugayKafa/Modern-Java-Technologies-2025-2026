@@ -10,12 +10,24 @@ import bg.sofia.uni.fmi.mjt.burnout.subject.UniversitySubject;
 
 public sealed abstract class AbstractSemesterPlanner implements SemesterPlannerAPI permits ComputerScienceSemesterPlanner, SoftwareEngineeringSemesterPlanner {
 
+    public static final String MISSING_INFORMATION_FOR_UNIVERSITY_SUBJECTS_MESSAGE = "Missing information for university subjects!";
+    public static final String SUBJECTS_LIST_IS_NULL_MESSAGE = "Subjects list is null!";
+    public static final int MULTIPLIER_FOR_HARD_SEMESTER = 2;
+    public static final int PERIOD_FOR_ONE_JAR = 5;
+    public static final String DISAPPOINTMENT_EXCEPTION_MESSAGE = "You are too lazy! Grandma is not happy!";
+    public static final String SEMESTER_DURATION_MUST_BE_POSITIVE_MESSAGE = "Semester duration must be positive!";
+    public static final String MAXIMUM_SLACK_TIME_MUST_BE_POSITIVE_MESSAGE = "Maximum slack time must be positive!";
+    public static final int MINIMUM_SLACK_TIME = 0;
+    public static final int MINIMUM_SEMESTER_DURATION = 0;
+    public static final String CRYING_STUDENT_MESSAGE = "Student is sad!";
+    public static final String EMPTY_SEMESTER_PLAN_MESSAGE = "Cannot calculate subject list without semester plan.";
+
     @Override
     public abstract UniversitySubject[] calculateSubjectList(SemesterPlan semesterPlan) throws InvalidSubjectRequirementsException;
 
     protected void checkIsSemesterPlanAlright(SemesterPlan semesterPlan) throws InvalidSubjectRequirementsException {
         if (semesterPlan == null) {
-            throw new IllegalArgumentException("Cannot calculate subject list without semester plan.");
+            throw new IllegalArgumentException(EMPTY_SEMESTER_PLAN_MESSAGE);
         }
 
         if (isCategoriesDuplicated(semesterPlan.subjectRequirements())) {
@@ -23,7 +35,7 @@ public sealed abstract class AbstractSemesterPlanner implements SemesterPlannerA
         }
 
         if (isStudentCrying(semesterPlan.subjects(), semesterPlan.minimalAmountOfCredits())) {
-            throw new CryToStudentsDepartmentException("Student is sad!");
+            throw new CryToStudentsDepartmentException(CRYING_STUDENT_MESSAGE);
         }
     }
 
@@ -52,12 +64,12 @@ public sealed abstract class AbstractSemesterPlanner implements SemesterPlannerA
 
     @Override
     public int calculateJarCount(UniversitySubject[] subjects, int maximumSlackTime, int semesterDuration) {
-        if (maximumSlackTime < 0) {
-            throw new IllegalArgumentException("Maximum slack time must be positive!");
+        if (maximumSlackTime < MINIMUM_SLACK_TIME) {
+            throw new IllegalArgumentException(MAXIMUM_SLACK_TIME_MUST_BE_POSITIVE_MESSAGE);
         }
 
-        if (semesterDuration < 0) {
-            throw new IllegalArgumentException("Semester duration must be positive!");
+        if (semesterDuration < MINIMUM_SEMESTER_DURATION) {
+            throw new IllegalArgumentException(SEMESTER_DURATION_MUST_BE_POSITIVE_MESSAGE);
         }
 
         checkSubjects(subjects);
@@ -67,16 +79,16 @@ public sealed abstract class AbstractSemesterPlanner implements SemesterPlannerA
         int restDays = 0;
         for (UniversitySubject subject : subjects) {
             studyDays += subject.neededStudyTime();
-            restDays += (int) Math.ceil(subject.neededStudyTime() * Category.getCoefficient(subject.category()));
+            restDays += (int) Math.ceil(subject.neededStudyTime() * subject.category().getCoefficient());
         }
 
         if (restDays > maximumSlackTime) {
-            throw new DisappointmentException("You are too lazy! Grandma is not happy!");
+            throw new DisappointmentException(DISAPPOINTMENT_EXCEPTION_MESSAGE);
         }
 
-        countOfJars += studyDays / 5;
+        countOfJars += studyDays / PERIOD_FOR_ONE_JAR;
         if (studyDays + restDays > semesterDuration) {
-            countOfJars *= 2;
+            countOfJars *= MULTIPLIER_FOR_HARD_SEMESTER;
         }
 
         return countOfJars;
@@ -84,12 +96,12 @@ public sealed abstract class AbstractSemesterPlanner implements SemesterPlannerA
 
     private void checkSubjects(UniversitySubject[] subjects) {
         if (subjects == null) {
-            throw new IllegalArgumentException("Subjects list is null!");
+            throw new IllegalArgumentException(SUBJECTS_LIST_IS_NULL_MESSAGE);
         }
 
         for (UniversitySubject subject : subjects) {
             if (subject == null) {
-                throw new IllegalArgumentException("Missing information for university subjects!");
+                throw new IllegalArgumentException(MISSING_INFORMATION_FOR_UNIVERSITY_SUBJECTS_MESSAGE);
             }
         }
     }

@@ -11,12 +11,22 @@ import bg.sofia.uni.fmi.mjt.burnout.subject.UniversitySubject;
 import java.util.Arrays;
 
 public final class SoftwareEngineeringSemesterPlanner extends AbstractSemesterPlanner {
+
+    public static final String CATEGORY_NOT_FOUND_MESSAGE = "Category not found!";
+    public static final String COULD_NOT_FIND_SUBJECT_MESSAGE = "Could not find subject from this category!";
+    public static final String CRY_TO_STUDENT_DEPARTMENT_MESSAGE = "It is not possible to satisfy category minimum enrolment!";
+    public static final int MATH_CATEGORY_INDEX = 0;
+    public static final int PROGRAMMING_CATEGORY_INDEX = 1;
+    public static final int THEORY_CATEGORY_INDEX = 2;
+    public static final int PRACTICAL_CATEGORY_INDEX = 3;
+    public static final int MATRIX_COLUMNS = 4;
+
     @Override
     public UniversitySubject[] calculateSubjectList(SemesterPlan semesterPlan) throws InvalidSubjectRequirementsException {
         checkIsSemesterPlanAlright(semesterPlan);
 
         if (!isThereEnoughSubjectsToSatisfyCategories(semesterPlan)) {
-            throw new CryToStudentsDepartmentException("It is not possible to satisfy category minimum enrolment!");
+            throw new CryToStudentsDepartmentException(CRY_TO_STUDENT_DEPARTMENT_MESSAGE);
         }
 
         sortSubjectsBasedOnCredits(semesterPlan.subjects());
@@ -42,7 +52,7 @@ public final class SoftwareEngineeringSemesterPlanner extends AbstractSemesterPl
         int subjectsCount = semesterPlan.subjects().length;
         UniversitySubject[] subjectsList = new UniversitySubject[subjectsCount];
 
-        UniversitySubject[][] matrix = new UniversitySubject[subjectsCount][4];
+        UniversitySubject[][] matrix = new UniversitySubject[subjectsCount][MATRIX_COLUMNS];
         fillMatrix(matrix, semesterPlan.subjects());
 
         return getSubjectList(subjectsList, matrix, semesterPlan);
@@ -86,14 +96,14 @@ public final class SoftwareEngineeringSemesterPlanner extends AbstractSemesterPl
             }
         }
 
-        throw new SubjectFromCategoryNotFound("Could not find subject from this category!");
+        throw new SubjectFromCategoryNotFound(COULD_NOT_FIND_SUBJECT_MESSAGE);
     }
 
     private void fillMatrix(UniversitySubject[][] matrix, UniversitySubject[] subjects) {
         for (int i = 0; i < subjects.length; i++) {
             int categoryIndex = getCategoryIndex(subjects[i].category());
 
-            for (int j = 0; j < 4; j++) {
+            for (int j = 0; j < MATRIX_COLUMNS; j++) {
                 if (j == categoryIndex) {
                     matrix[i][j] = subjects[i];
                 } else {
@@ -106,19 +116,19 @@ public final class SoftwareEngineeringSemesterPlanner extends AbstractSemesterPl
     private int getCategoryIndex(Category subject) {
         switch (subject) {
             case MATH -> {
-                return 0;
+                return MATH_CATEGORY_INDEX;
             }
             case PROGRAMMING -> {
-                return 1;
+                return PROGRAMMING_CATEGORY_INDEX;
             }
             case THEORY -> {
-                return 2;
+                return THEORY_CATEGORY_INDEX;
             }
             case PRACTICAL -> {
-                return 3;
+                return PRACTICAL_CATEGORY_INDEX;
             }
         }
-        throw new SubjectFromCategoryNotFound("Category not found!");
+        throw new SubjectFromCategoryNotFound(CATEGORY_NOT_FOUND_MESSAGE);
     }
 
     private boolean isThereEnoughSubjectsToSatisfyCategories(SemesterPlan semesterPlan) {
