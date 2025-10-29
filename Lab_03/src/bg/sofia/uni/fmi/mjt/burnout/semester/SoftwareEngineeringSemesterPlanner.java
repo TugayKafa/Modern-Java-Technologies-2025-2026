@@ -132,18 +132,16 @@ public final class SoftwareEngineeringSemesterPlanner extends AbstractSemesterPl
     }
 
     private boolean isThereEnoughSubjectsToSatisfyCategories(SemesterPlan semesterPlan) {
-        for (SubjectRequirement subjectRequirement : semesterPlan.subjectRequirements()) {
-            int count = 0;
-            for (UniversitySubject subject : semesterPlan.subjects()) {
-                if (subject.category() == subjectRequirement.category()) {
-                    count++;
-                    if (count == subjectRequirement.minAmountEnrolled()) {
-                        break;
-                    }
-                }
-            }
+        int[] countForEveryCategory = new int[MATRIX_COLUMNS];
+        int categoryIndex;
+        for (UniversitySubject subject : semesterPlan.subjects()) {
+            categoryIndex = getCategoryIndex(subject.category());
+            countForEveryCategory[categoryIndex]++;
+        }
 
-            if (count < subjectRequirement.minAmountEnrolled()) {
+        for (SubjectRequirement subjectRequirement : semesterPlan.subjectRequirements()) {
+            categoryIndex = getCategoryIndex(subjectRequirement.category());
+            if (countForEveryCategory[categoryIndex] < subjectRequirement.minAmountEnrolled()) {
                 return false;
             }
         }
