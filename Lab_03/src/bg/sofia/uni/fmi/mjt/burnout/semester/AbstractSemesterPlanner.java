@@ -8,9 +8,11 @@ import bg.sofia.uni.fmi.mjt.burnout.subject.Category;
 import bg.sofia.uni.fmi.mjt.burnout.subject.SubjectRequirement;
 import bg.sofia.uni.fmi.mjt.burnout.subject.UniversitySubject;
 
-public sealed abstract class AbstractSemesterPlanner implements SemesterPlannerAPI permits ComputerScienceSemesterPlanner, SoftwareEngineeringSemesterPlanner {
+public abstract sealed class AbstractSemesterPlanner implements SemesterPlannerAPI
+        permits ComputerScienceSemesterPlanner, SoftwareEngineeringSemesterPlanner {
 
-    public static final String MISSING_INFORMATION_FOR_UNIVERSITY_SUBJECTS_MESSAGE = "Missing information for university subjects!";
+    public static final String MISSING_INFORMATION_FOR_UNIVERSITY_SUBJECTS_MESSAGE =
+            "Missing information for university subjects!";
     public static final String SUBJECTS_LIST_IS_NULL_MESSAGE = "Subjects list is null!";
     public static final int MULTIPLIER_FOR_HARD_SEMESTER = 2;
     public static final int PERIOD_FOR_ONE_JAR = 5;
@@ -23,7 +25,8 @@ public sealed abstract class AbstractSemesterPlanner implements SemesterPlannerA
     public static final String EMPTY_SEMESTER_PLAN_MESSAGE = "Cannot calculate subject list without semester plan.";
 
     @Override
-    public abstract UniversitySubject[] calculateSubjectList(SemesterPlan semesterPlan) throws InvalidSubjectRequirementsException;
+    public abstract UniversitySubject[] calculateSubjectList(SemesterPlan semesterPlan)
+            throws InvalidSubjectRequirementsException;
 
     protected void checkIsSemesterPlanAlright(SemesterPlan semesterPlan) throws InvalidSubjectRequirementsException {
         if (semesterPlan == null) {

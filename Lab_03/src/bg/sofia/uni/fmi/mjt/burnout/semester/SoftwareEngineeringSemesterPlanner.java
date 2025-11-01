@@ -14,7 +14,8 @@ public final class SoftwareEngineeringSemesterPlanner extends AbstractSemesterPl
 
     public static final String CATEGORY_NOT_FOUND_MESSAGE = "Category not found!";
     public static final String COULD_NOT_FIND_SUBJECT_MESSAGE = "Could not find subject from this category!";
-    public static final String CRY_TO_STUDENT_DEPARTMENT_MESSAGE = "It is not possible to satisfy category minimum enrolment!";
+    public static final String CRY_TO_STUDENT_DEPARTMENT_MESSAGE =
+            "It is not possible to satisfy category minimum enrolment!";
     public static final int MATH_CATEGORY_INDEX = 0;
     public static final int PROGRAMMING_CATEGORY_INDEX = 1;
     public static final int THEORY_CATEGORY_INDEX = 2;
@@ -22,7 +23,8 @@ public final class SoftwareEngineeringSemesterPlanner extends AbstractSemesterPl
     public static final int MATRIX_COLUMNS = 4;
 
     @Override
-    public UniversitySubject[] calculateSubjectList(SemesterPlan semesterPlan) throws InvalidSubjectRequirementsException {
+    public UniversitySubject[] calculateSubjectList(SemesterPlan semesterPlan)
+            throws InvalidSubjectRequirementsException {
         checkIsSemesterPlanAlright(semesterPlan);
 
         if (!isThereEnoughSubjectsToSatisfyCategories(semesterPlan)) {
@@ -58,7 +60,9 @@ public final class SoftwareEngineeringSemesterPlanner extends AbstractSemesterPl
         return getSubjectList(subjectsList, matrix, semesterPlan);
     }
 
-    private UniversitySubject[] getSubjectList(UniversitySubject[] subjectsList, UniversitySubject[][] matrix, SemesterPlan semesterPlan) {
+    private UniversitySubject[] getSubjectList(UniversitySubject[] subjectsList,
+                                               UniversitySubject[][] matrix,
+                                               SemesterPlan semesterPlan) {
         int index = 0;
         int credits = 0;
         boolean[] isUsed = new boolean[matrix.length];

@@ -7,7 +7,8 @@ import bg.sofia.uni.fmi.mjt.burnout.subject.UniversitySubject;
 public final class ComputerScienceSemesterPlanner extends AbstractSemesterPlanner {
 
     @Override
-    public UniversitySubject[] calculateSubjectList(SemesterPlan semesterPlan) throws InvalidSubjectRequirementsException {
+    public UniversitySubject[] calculateSubjectList(SemesterPlan semesterPlan)
+            throws InvalidSubjectRequirementsException {
         checkIsSemesterPlanAlright(semesterPlan);
 
         UniversitySubject[] subjects = semesterPlan.subjects();

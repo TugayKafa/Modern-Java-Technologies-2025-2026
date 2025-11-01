@@ -19,15 +19,17 @@ public record UniversitySubject(String name, int credits, int rating, Category c
     public static final String CREDITS_MUST_BE_BETWEEN_1_5_MESSAGE = "Credits must be between 1-5!";
     public static final String CATEGORY_MUST_NOT_BE_NULL_MESSAGE = "Category must not be null!";
     public static final String NEEDED_STUDY_TIME_MUST_BE_POSITIVE_MESSAGE = "Needed study time must be positive!";
+    public static final int MIN_RATING = 1;
+    public static final int MAX_RATING = 5;
 
     public UniversitySubject {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException(NAME_MUST_BE_NOT_BLANK_MESSAGE);
         }
-        if (rating < 1) {
+        if (rating < MIN_RATING) {
             throw new IllegalArgumentException(CREDITS_MUST_BE_POSITIVE_MESSAGE);
         }
-        if (rating > 5) {
+        if (rating > MAX_RATING) {
             throw new IllegalArgumentException(CREDITS_MUST_BE_BETWEEN_1_5_MESSAGE);
         }
         if (category == null) {
