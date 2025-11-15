@@ -11,6 +11,7 @@ public class PublicVoteEliminationRule implements EliminationRule {
 
     @Override
     public Ergenka[] eliminateErgenkas(Ergenka[] ergenkas) {
+        if (ergenkas == null) return new Ergenka[0];
         String nameOfEliminatedErgenka = eliminateErgenka(ergenkas);
         if (nameOfEliminatedErgenka == null) return ergenkas;
 
@@ -21,6 +22,7 @@ public class PublicVoteEliminationRule implements EliminationRule {
         Ergenka[] notEliminatedErgenkas = new Ergenka[ergenkas.length - 1];
         int idx = 0;
         for (Ergenka ergenka : ergenkas) {
+            if (ergenka == null) continue;
             if (ergenka.getName().equals(nameOfEliminatedErgenka)) continue;
             notEliminatedErgenkas[idx++] = ergenka;
         }
@@ -32,6 +34,9 @@ public class PublicVoteEliminationRule implements EliminationRule {
         String nameOfErgenka = null;
         int count = 0;
         for (String vote : votes) {
+            if (vote == null) {
+                continue;
+            }
             if (count == 0) {
                 nameOfErgenka = vote;
                 count++;
@@ -52,11 +57,14 @@ public class PublicVoteEliminationRule implements EliminationRule {
     private boolean isVoteMajority(String nameOfErgenka, Ergenka[] ergenkas) {
         int allVotesForErgenka = 0;
         for (String vote : votes) {
+            if (vote == null) {
+                continue;
+            }
             if (vote.equals(nameOfErgenka)) {
                 allVotesForErgenka++;
             }
         }
 
-        return allVotesForErgenka > ergenkas.length / 2;
+        return allVotesForErgenka >= ergenkas.length / 2 + 1;
     }
 }

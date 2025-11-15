@@ -12,13 +12,18 @@ public class HumorousErgenka extends AbstractErgenka {
     private static final int ROMANCE_LEVEL_DIVIDER = 3;
     private static final int HUMOR_LEVEL_MULTIPLIER = 5;
 
-    public HumorousErgenka(String name, short age, int romanceLevel, int humorLevel, int rating) {
+    public HumorousErgenka(String name,
+                           short age,
+                           int romanceLevel,
+                           int humorLevel,
+                           int rating) {
         super(name, age, romanceLevel, humorLevel, rating);
     }
 
     @Override
     public void reactToDate(DateEvent dateEvent) {
-        rating = (humorLevel * HUMOR_LEVEL_MULTIPLIER) / dateEvent.getTensionLevel() + romanceLevel / ROMANCE_LEVEL_DIVIDER;
+        rating = (humorLevel * HUMOR_LEVEL_MULTIPLIER) / dateEvent.getTensionLevel() +
+                Math.floorDiv(romanceLevel, ROMANCE_LEVEL_DIVIDER);
 
         int duration = dateEvent.getDuration();
         if (duration < SHORT_DATE_DURATION) {

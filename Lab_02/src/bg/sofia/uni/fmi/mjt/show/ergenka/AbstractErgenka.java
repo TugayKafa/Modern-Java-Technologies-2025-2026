@@ -4,14 +4,16 @@ import bg.sofia.uni.fmi.mjt.show.date.DateEvent;
 
 public abstract class AbstractErgenka implements Ergenka {
 
-    protected final String name;
+    protected String name = "default";
     protected short age;
     protected int romanceLevel;
     protected int humorLevel;
     protected int rating;
 
     public AbstractErgenka(String name, short age, int romanceLevel, int humorLevel, int rating) {
-        this.name = name;
+        if (name != null) {
+            this.name = name;
+        }
         this.age = age;
         this.romanceLevel = romanceLevel;
         this.humorLevel = humorLevel;
