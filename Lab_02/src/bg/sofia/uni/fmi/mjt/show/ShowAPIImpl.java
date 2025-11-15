@@ -11,12 +11,8 @@ public class ShowAPIImpl implements ShowAPI {
     private EliminationRule[] defaultEliminationRule;
 
     public ShowAPIImpl(Ergenka[] ergenkas, EliminationRule[] defaultEliminationRules) {
-        if (ergenkas == null) {
-            this.ergenkas = new Ergenka[1];
-        } else this.ergenkas = ergenkas;
-        if (defaultEliminationRules == null) {
-            this.defaultEliminationRule = new EliminationRule[1];
-        } else this.defaultEliminationRule = defaultEliminationRules;
+        this.ergenkas = ergenkas;
+        this.defaultEliminationRule = defaultEliminationRules;
     }
 
     @Override
@@ -26,7 +22,10 @@ public class ShowAPIImpl implements ShowAPI {
 
     @Override
     public void playRound(DateEvent dateEvent) {
-        if (dateEvent == null) return;
+        if (ergenkas == null || ergenkas.length == 0) {
+            return;
+        }
+
         for (Ergenka ergenka : ergenkas) {
             if (ergenka == null) {
                 continue;

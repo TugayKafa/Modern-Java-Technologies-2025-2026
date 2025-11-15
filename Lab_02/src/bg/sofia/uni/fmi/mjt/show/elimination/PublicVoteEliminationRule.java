@@ -12,18 +12,43 @@ public class PublicVoteEliminationRule implements EliminationRule {
     @Override
     public Ergenka[] eliminateErgenkas(Ergenka[] ergenkas) {
         if (ergenkas == null) return new Ergenka[0];
+        ergenkas = removeNullErgenkas(ergenkas);
         String nameOfEliminatedErgenka = eliminateErgenka(ergenkas);
         if (nameOfEliminatedErgenka == null) return ergenkas;
 
         return getNotEliminatedErgenkas(ergenkas, nameOfEliminatedErgenka);
     }
 
+    private Ergenka[] removeNullErgenkas(Ergenka[] ergenkas) {
+        int count = 0;
+        for (Ergenka ergenka : ergenkas) {
+            if (ergenka == null) {
+                count++;
+            }
+        }
+        Ergenka[] withoutNullErgenkas = new Ergenka[ergenkas.length - count];
+        int idx = 0;
+        for (Ergenka ergenka : ergenkas) {
+            if (ergenka != null) {
+                withoutNullErgenkas[idx++] = ergenka;
+            }
+        }
+        return withoutNullErgenkas;
+    }
+
     private Ergenka[] getNotEliminatedErgenkas(Ergenka[] ergenkas, String nameOfEliminatedErgenka) {
         Ergenka[] notEliminatedErgenkas = new Ergenka[ergenkas.length - 1];
         int idx = 0;
+        boolean isRemoved = false;
+
         for (Ergenka ergenka : ergenkas) {
             if (ergenka == null) continue;
-            if (ergenka.getName().equals(nameOfEliminatedErgenka)) continue;
+
+            if (!isRemoved && ergenka.getName().equals(nameOfEliminatedErgenka)) {
+                isRemoved = true;
+                continue;
+            }
+
             notEliminatedErgenkas[idx++] = ergenka;
         }
 
@@ -47,11 +72,18 @@ public class PublicVoteEliminationRule implements EliminationRule {
             }
         }
 
-        if (nameOfErgenka == null || !isVoteMajority(nameOfErgenka, ergenkas)) {
+        if (nameOfErgenka == null || !exists(ergenkas, nameOfErgenka) || !isVoteMajority(nameOfErgenka, ergenkas)) {
             return null;
         }
 
         return nameOfErgenka;
+    }
+
+    private boolean exists(Ergenka[] ergenkas, String name) {
+        for (Ergenka e : ergenkas) {
+            if (e.getName().equals(name)) return true;
+        }
+        return false;
     }
 
     private boolean isVoteMajority(String nameOfErgenka, Ergenka[] ergenkas) {
@@ -65,6 +97,6 @@ public class PublicVoteEliminationRule implements EliminationRule {
             }
         }
 
-        return allVotesForErgenka >= ergenkas.length / 2 + 1;
+        return allVotesForErgenka > votes.length / 2;
     }
 }

@@ -10,9 +10,27 @@ public class LowestRatingEliminationRule implements EliminationRule {
     @Override
     public Ergenka[] eliminateErgenkas(Ergenka[] ergenkas) {
         if (ergenkas == null) return new Ergenka[0];
+        ergenkas = removeNullErgenkas(ergenkas);
         int lowestRating = findLowestRating(ergenkas);
 
         return eliminateErgenkas(ergenkas, lowestRating);
+    }
+
+    private Ergenka[] removeNullErgenkas(Ergenka[] ergenkas) {
+        int count = 0;
+        for (Ergenka ergenka : ergenkas) {
+            if (ergenka == null) {
+                count++;
+            }
+        }
+        Ergenka[] withoutNullErgenkas = new Ergenka[ergenkas.length - count];
+        int idx = 0;
+        for (Ergenka ergenka : ergenkas) {
+            if (ergenka != null) {
+                withoutNullErgenkas[idx++] = ergenka;
+            }
+        }
+        return withoutNullErgenkas;
     }
 
     private Ergenka[] eliminateErgenkas(Ergenka[] ergenkas, int lowestRating) {

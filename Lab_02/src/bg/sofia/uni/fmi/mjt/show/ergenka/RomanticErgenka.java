@@ -13,6 +13,7 @@ public class RomanticErgenka extends AbstractErgenka {
     private static final int ROMANCE_LEVEL_MULTIPLIER = 7;
 
     private String favoriteDateLocation = "DEFAULT";
+    private final DateEvent defaultDateEvent = new DateEvent("default", 5, 60);
 
     public RomanticErgenka(String name,
                            short age,
@@ -28,16 +29,23 @@ public class RomanticErgenka extends AbstractErgenka {
 
     @Override
     public void reactToDate(DateEvent dateEvent) {
-        rating = (romanceLevel * ROMANCE_LEVEL_MULTIPLIER) / dateEvent.getTensionLevel() +
+        if (dateEvent == null) {
+            dateEvent = defaultDateEvent;
+        }
+
+        int delta = (romanceLevel * ROMANCE_LEVEL_MULTIPLIER) / dateEvent.getTensionLevel() +
                 Math.floorDiv(humorLevel, HUMOR_LEVEL_DIVIDER);
 
-        int duration = dateEvent.getDuration();
         if (favoriteDateLocation.equalsIgnoreCase(dateEvent.getLocation())) {
-            rating += BONUS_FOR_FAVOURITE_PLACE;
-        } else if (duration < SHORT_DATE_DURATION) {
-            rating -= BONUS_FOR_SHORT_DATE;
-        } else if (duration > LONG_DATE_DURATION) {
-            rating -= BONUS_FOR_LONG_DATE;
+            delta += BONUS_FOR_FAVOURITE_PLACE;
         }
+
+        int duration = dateEvent.getDuration();
+        if (duration < SHORT_DATE_DURATION) {
+            delta -= BONUS_FOR_SHORT_DATE;
+        } else if (duration > LONG_DATE_DURATION) {
+            delta -= BONUS_FOR_LONG_DATE;
+        }
+        rating += delta;
     }
 }
