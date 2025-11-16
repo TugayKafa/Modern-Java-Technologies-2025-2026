@@ -12,6 +12,7 @@ public class PublicVoteEliminationRule implements EliminationRule {
     @Override
     public Ergenka[] eliminateErgenkas(Ergenka[] ergenkas) {
         if (ergenkas == null) return new Ergenka[0];
+        if (votes == null || votes.length == 0) return ergenkas;
         ergenkas = removeNullErgenkas(ergenkas);
         String nameOfEliminatedErgenka = eliminateErgenka(ergenkas);
         if (nameOfEliminatedErgenka == null) return ergenkas;
