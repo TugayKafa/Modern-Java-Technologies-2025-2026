@@ -40,7 +40,7 @@ public class FitPlanner implements FitPlannerAPI {
             throw new IllegalArgumentException("Total minutes must not be negative!");
         }
 
-        if (totalMinutes == 0) {
+        if (totalMinutes == 0 || availableWorkouts.isEmpty()) {
             return new ArrayList<>();
         }
 
